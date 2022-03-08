@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' as Geocoding;
 import 'package:location/location.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'Adress_model.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -15,8 +18,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  //late AdressProvider _adressProvider;
+
+  // Permições do dispositivo
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
+
+  //Localização do usuário
   LocationData? _userLocation;
 
   double? lat;
@@ -80,9 +88,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  getAdress() {
-    return print(
-        'Rua: $street Pais:$country cartãoPostal:$postalCode Area:$subAdmArea');
+  saveAdress() {
+    var adress = Adress(
+      rua: street,
+      pais: country,
+      cidade: subAdmArea,
+      cartaoPostal: postalCode,
+    );
+    AdressProvider.instance.initDb();
+    AdressProvider.instance.insert(adress);
   }
 
   @override
@@ -145,11 +159,21 @@ class _MyAppState extends State<MyApp> {
               SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  getAdress();
+                  saveAdress();
+                  print(saveAdress());
+                  print('');
                 },
-                child: Text('Pegar Endereço'),
+                child: Text('Salvar endereço'),
                 style: style,
               ),
+              SizedBox(
+                height: 30,
+              ),
+              ElevatedButton(
+                  onPressed: () => {},
+                  child: Text(
+                    'Acessar lista de endereços',
+                  )),
             ],
           ))),
     );
