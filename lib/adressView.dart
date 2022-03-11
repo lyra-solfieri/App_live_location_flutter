@@ -13,7 +13,7 @@ class _AdresViewState extends State<AdresView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Endereços e daddos da rota '),
+          title: Text('Endereços e dados da rota '),
         ),
         body: Container(
           child: FutureBuilder<List<Adress>>(
@@ -29,7 +29,7 @@ class _AdresViewState extends State<AdresView> {
                 children: snapshot.data!.map((adress) {
                   return Center(
                     child: ListTile(
-                      title: Text(adress.rua.toString()),
+                      title: Text(adress.toMap().toString()),
                     ),
                   );
                 }).toList(),

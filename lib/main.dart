@@ -175,13 +175,15 @@ class _HomeState extends State<Home> {
               height: 30,
             ),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      new MaterialPageRoute(builder: (context) => AdresView()));
-                },
-                child: Text(
-                  'Acessar lista de endereços',
-                )),
+              onPressed: () {
+                Navigator.push(context,
+                    new MaterialPageRoute(builder: (context) => AdresView()));
+              },
+              child: Text(
+                'Acessar lista de endereços',
+              ),
+              style: style,
+            ),
           ],
         )));
   }
