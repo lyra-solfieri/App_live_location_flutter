@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' as Geocoding;
 import 'package:location/location.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Adress_model.dart';
+import 'package:user_location/adressView.dart';
+import 'adress_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  static const String _title = 'localização do usuário';
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'User Location ',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: Home());
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  //late AdressProvider _adressProvider;
+//// Classe principal
 
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   // Permições do dispositivo
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
@@ -103,79 +116,73 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final ButtonStyle style =
         ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: MyApp._title,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text(MyApp._title),
-          ),
-          body: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.location_pin,
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('User Location '),
+        ),
+        body: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.location_pin,
+              color: Colors.green,
+              size: 35,
+            ),
+            SizedBox(height: 30),
+            Text(
+              'Pegar localização do usuário',
+              style: TextStyle(
+                fontSize: 15,
                 color: Colors.green,
-                size: 35,
               ),
-              SizedBox(height: 30),
-              Text(
-                'Pegar localização do usuário',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.green,
-                ),
+            ),
+            SizedBox(height: 30),
+            Text(
+              _userLocation.toString(),
+              style: TextStyle(
+                color: Colors.green,
               ),
-              SizedBox(height: 30),
-              Text(
-                _userLocation.toString(),
-                style: TextStyle(
-                  color: Colors.green,
-                ),
-              ),
-              SizedBox(height: 30),
-              ElevatedButton(
-                style: style,
-                child: Text('pegar localização'),
+            ),
+            SizedBox(height: 30),
+            ElevatedButton(
+              style: style,
+              child: Text('pegar localização'),
+              onPressed: () {
+                _getUserLocation();
+                print(_userLocation);
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              style: style,
+              child: Text('Abrir google maps'),
+              onPressed: () {
+                googleMap();
+              },
+            ),
+            SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                saveAdress();
+              },
+              child: Text('Salvar endereço'),
+              style: style,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ElevatedButton(
                 onPressed: () {
-                  _getUserLocation();
-                  print(_userLocation);
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => AdresView()));
                 },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                style: style,
-                child: Text('Abrir google maps'),
-                onPressed: () {
-                  googleMap();
-                },
-              ),
-              SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {
-                  saveAdress();
-                  print(saveAdress());
-                  print('');
-                },
-                child: Text('Salvar endereço'),
-                style: style,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                  onPressed: () => {},
-                  child: Text(
-                    'Acessar lista de endereços',
-                  )),
-            ],
-          ))),
-    );
+                child: Text(
+                  'Acessar lista de endereços',
+                )),
+          ],
+        )));
   }
 }

@@ -57,6 +57,7 @@ class AdressProvider {
   Future initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, 'adress.db');
+    print("Endereço do db:" + path);
 
     return await openDatabase(
       path,
@@ -85,21 +86,6 @@ class AdressProvider {
         adress.isNotEmpty ? adress.map((e) => Adress.fromMap(e)).toList() : [];
     return adressList;
   }
-
-  /* List<Map<String, dynamic>> maps = await db!.query(adressTable,
-        columns: [
-          columnId,
-          columnrua,
-          columnPais,
-          columnCartaoPostal,
-          columnCidade,
-        ],
-        where: '$columnId = ?',
-        whereArgs: [id]);
-    if (maps.length > 0) {
-      return Adress.fromMap(maps.first);
-    }
-    return false;*/
 
   Future<int> delete(int id) async {
     return await db!.delete(
